@@ -51,9 +51,9 @@ Materia: Sistemas distribuidos
 Crea un archivo `.env` en la raíz del proyecto con las siguientes variables:
 
 ```env
-POSTGRES_USER=postgres
-POSTGRES_PASSWORD=password
-POSTGRES_DB=db_demo
+POSTGRES_USER=<usuario>
+POSTGRES_PASSWORD=<contraseña>
+POSTGRES_DB=<nombre_bd>
 ```
 
 > El archivo `.env` es leído automáticamente por Docker Compose.

@@ -29,7 +29,7 @@ def create_db():
     cur.execute("""
         CREATE TABLE IF NOT EXISTS users (
             nombre VARCHAR(100),
-            correo VARCHAR(100),
+            correo VARCHAR(100) UNIQUE,
             direccion VARCHAR(255),
             telefono BIGINT,
             password VARCHAR(80));
@@ -138,13 +138,24 @@ def create_user():
                     return jsonify({"status": "error", 
                                     "message": f"El campo '{field}' debe ser un número entero"
                                     }), 400
-            
+            elif field == 'correo':
+                if not isinstance(data[field], str) or '@' not in data[field]:
+                    return jsonify({"status": "error", 
+                                    "message": f"El campo '{field}' debe ser un correo electrónico válido"
+                                    }), 400
+                
+                #Comprobar que el correo no esté registrado
+                cur.execute("SELECT COUNT(*) FROM users WHERE correo = %s;", (data[field],))
+                if cur.fetchone()[0] > 0:
+                    return jsonify({"status": "error", 
+                                    "message": f"El correo '{data[field]}' ya está registrado"
+                                    }), 400
+                
             else:
                 if not isinstance(data[field], str):
                     return jsonify({"status": "error", 
                                     "message": f"El campo '{field}' debe ser una cadena de texto"
                                     }), 400
-            
             
         nombre = data['nombre']
         correo = data['correo']
